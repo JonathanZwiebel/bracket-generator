@@ -46,7 +46,8 @@ class Game:
 
     def __repr__(self):
         output = str(self)
-        output = output + "\nDone: " + str(self.done) + (" | Winner: " + self.winner + " Loser: " + self.loser if self.done else "")
+        output = output + "\nDone: " + \
+            str(self.done) + (" | Winner: " + self.winner + " Loser: " + self.loser if self.done else "")
         return output
 
     def get_raw_players(self):
@@ -146,25 +147,26 @@ class TournamentGUI:
         self.status = tkinter.Label(master, text="Enter a Game ID and Winner.")
         self.status.pack()
 
-        self.textBox_game=tkinter.Text(master, height=2, width=10)
+        self.textBox_game = tkinter.Text(master, height=2, width=10)
         self.textBox_game.pack()
 
-        self.textBox_winner=tkinter.Text(master, height=2, width=10)
+        self.textBox_winner = tkinter.Text(master, height=2, width=10)
         self.textBox_winner.pack()
 
-        self.greet_button = tkinter.Button(master, text="Play Game", command=self.play_game)
+        self.greet_button = tkinter.Button(
+            master, text="Play Game", command=self.play_game)
         self.greet_button.pack()
 
     def play_game(self):
-        result = t.play_game(self.textBox_game.get("1.0",'end-1c').strip(), self.textBox_winner.get("1.0",'end-1c').strip())
+        result = t.play_game(self.textBox_game.get("1.0", 'end-1c').strip(), self.textBox_winner.get("1.0", 'end-1c').strip())
         self.label['text'] = str([str(g) for g in t.games.values() if g.is_ready() and not g.done])
-        
         if result:
             self.textBox_game.delete('1.0', tkinter.END)
             self.textBox_winner.delete('1.0', tkinter.END)
             self.status['text'] = "Enter a Game ID and Winner."
         else:
             self.status['text'] = "Error. Re-enter game and winner."
+
 
 players = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"]
 t = Tournament(players)
