@@ -173,5 +173,48 @@ t = Tournament(players)
 t.generate_bracket("single", True)
 
 root = tkinter.Tk()
-my_gui = TournamentGUI(root, t)
-root.mainloop()
+
+"""
+BRACKET DRAWING PRROF OF CONCEPT
+"""
+
+HEIGHT = 1000  # root.winfo_screenheight()
+WIDTH = 2000  # root.winfo_screenwidth()
+HORIZONTAL_PADDING = 70
+GAME_BOX_WIDTH_HEIGHT_RATIO = 3
+
+_size = 4
+_columns = _size * 2 + 1
+_column_width = WIDTH / _columns
+_game_box_width = _column_width - HORIZONTAL_PADDING
+_game_box_height = _game_box_width / GAME_BOX_WIDTH_HEIGHT_RATIO
+
+
+canvas = tkinter.Canvas(root, width=WIDTH, height=HEIGHT)
+canvas.pack()
+
+for i in range(_columns):
+    if i - _size < 0:
+        side = "LEFT"
+    elif i - _size > 0:
+        side = "RIGHT"
+    else:
+        side = "CENTER"
+    games = 2 ** abs(i - _size)
+    x_center = _column_width * (i + 0.5)
+    y_size = HEIGHT / games
+    for j in range(games):
+        y_center = y_size * (j + 0.5)
+        canvas.create_rectangle(x_center - _game_box_width / 2, y_center - _game_box_height / 2, x_center + _game_box_width / 2, y_center + _game_box_height / 2)
+        if i != _columns - 1:
+            canvas.create_line(x_center + _game_box_width / 2, y_center, x_center + _game_box_width / 2 + HORIZONTAL_PADDING / 2, y_center)
+        if i != 0:
+            canvas.create_line(x_center - _game_box_width / 2, y_center, x_center - _game_box_width / 2 - HORIZONTAL_PADDING / 2, y_center)
+
+        if j % 2 == 1:
+            if side == "LEFT":
+                canvas.create_line(x_center + _game_box_width / 2 + HORIZONTAL_PADDING / 2, y_center, x_center + _game_box_width / 2 + HORIZONTAL_PADDING / 2, y_center - y_size)
+            if side == "RIGHT":
+                canvas.create_line(x_center - _game_box_width / 2 - HORIZONTAL_PADDING / 2, y_center, x_center - _game_box_width / 2 - HORIZONTAL_PADDING / 2, y_center - y_size)
+
+tkinter.mainloop()
